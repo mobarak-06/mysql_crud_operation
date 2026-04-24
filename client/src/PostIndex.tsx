@@ -1,4 +1,5 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 interface User {
   id: number;
@@ -48,6 +49,23 @@ function PostIndex() {
     setEditId(user.id);
   };
 
+  const fetchUsers = () => {
+    axios.get("http://localhost:8000/api/posts").then((res) => {
+      setUsers(res.data);
+    });
+  };
+
+useEffect(() => {
+  fetchUsers(); 
+
+  const interval = setInterval(() => {
+    fetchUsers(); 
+  }, 3000);
+
+  return () => clearInterval(interval); 
+}, []);
+
+  console.log("user data", users);
   return (
     <div className="max-w-5xl mx-auto mt-10 px-4">
       <h2 className="text-2xl font-bold text-center text-indigo-600 mb-6">
@@ -120,10 +138,10 @@ function PostIndex() {
                     index % 2 === 0 ? "bg-gray-50" : "bg-white"
                   } hover:bg-indigo-50 transition`}
                 >
-                  <td className="p-3">{u.id}</td>
-                  <td className="p-3 font-medium">{u.name}</td>
-                  <td className="p-3">{u.email}</td>
-                  <td className="p-3">{u.password}</td>
+                  <td className="p-3">{u?.id}</td>
+                  <td className="p-3 font-medium">{u?.name}</td>
+                  <td className="p-3">{u?.email}</td>
+                  <td className="p-3">{u?.password}</td>
 
                   <td className="p-3 text-center space-x-2">
                     <button
